@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  postgresDB:
+    image: postgres:17
+    restart: always
+    environment:
+      - POSTGRES_USER=zaiko
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=db_HS
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+    command: postgres -c listen_addresses='*'
