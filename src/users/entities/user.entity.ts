@@ -1,7 +1,8 @@
-import { IsEmail, IsInt, IsNumber, Max, Min } from "class-validator";
+
 import { UserRole } from "../../common/enums/user-role.enum";
 import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { UserGender } from "src/common/enums/user-gender.enum";
+
 
 @Entity()
 export class UserEntity {
@@ -12,13 +13,10 @@ export class UserEntity {
     name: string;
 
     @Column({unique: true, nullable: false})
-    @IsEmail()
+
     email: string;
 
     @Column()
-    @IsInt()
-    @Min(16)
-    @Max(120)
     age: number;
 
     @Column({type:"enum",enum: UserGender})
@@ -27,8 +25,11 @@ export class UserEntity {
     @Column({type: 'enum', default: UserRole.USER, enum: UserRole})
     role: UserRole;
 
-    @Column( {nullable: false, select: false})
+    @Column()
     password: string;
+
+     @Column({type:'boolean', default:false})
+    active: boolean;
 
     @DeleteDateColumn()
     deletedAt: Date

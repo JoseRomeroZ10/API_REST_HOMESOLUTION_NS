@@ -1,5 +1,13 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { UserGender } from "src/common/enums/user-gender.enum";
+import { Type } from 'class-transformer';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { UserGender } from 'src/common/enums/user-gender.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -11,6 +19,7 @@ export class CreateUserDto {
   gender: UserGender;
 
   @IsString()
+  @IsEmail()
   @IsNotEmpty()
   email: string;
 
@@ -19,7 +28,7 @@ export class CreateUserDto {
   password: string;
 
   @IsNumber()
+  @Type(() => Number)
   @IsNotEmpty()
   age: number;
-
 }

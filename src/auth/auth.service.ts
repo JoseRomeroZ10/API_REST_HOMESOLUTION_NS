@@ -1,4 +1,4 @@
-import {BadRequestException,Injectable,UnauthorizedException,} from '@nestjs/common';
+import {BadRequestException,ForbiddenException,Injectable,NotFoundException,UnauthorizedException,} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register-auth.dto';
 import * as bcryptjs from 'bcryptjs';
@@ -18,14 +18,18 @@ export class AuthService {
     if (user) {
       throw new BadRequestException('User already exists');
     }
+    
     await this.usersService.create({
       ...registerDto,
       password: await bcryptjs.hash(registerDto.password, 10),
+  
     });
-
+    console.log('[AuthService] Enviando correo de activación a', registerDto.email);
+    
     return {
       name: registerDto.name,
       email: registerDto.email,
+      message: " Ve a tu correo y verifica que eres tu "
     };
   }
 
@@ -41,10 +45,15 @@ export class AuthService {
       loginDto.password,
       user.password,
     );
-
     if (!isPasswordValid) {
       throw new UnauthorizedException ('Incorrect password');
     }
+    
+    if(user.active === false){
+      throw new ForbiddenException('Your account has not yet been verified.')
+      
+    }
+    console.log('Estado de activación:', user.active);
 
     const payload = { email: user.email, role: user.role };
 
@@ -53,10 +62,15 @@ export class AuthService {
     return {
       token,
       email: user.email,
+      
     };
+    
   }
+
+  //funciones adicinales 
 
   async profile({ email, role }: { email: string; role: string }) {
     return await this.usersService.findOneByEmail(email);
   }
+
 }

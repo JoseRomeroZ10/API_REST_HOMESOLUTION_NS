@@ -1,11 +1,16 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { PaginationDto } from '../common/decorators/pagination';
+import { PaginationDto } from '../common/dto/pagination';
 import { AllApiResponse } from '../common/interface/respose-api.interface';
+
 
 @Injectable()
 export class UsersService {
@@ -14,23 +19,24 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise <UserEntity> {
-    return await this.userRepository.save(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    return await this.userRepository.save(createUserDto)
   }
-
-  async findAll(paginationDto: PaginationDto): Promise<AllApiResponse<UserEntity>> {
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<AllApiResponse<UserEntity>> {
     const { limit, page } = paginationDto;
     const skip = (page - 1) * limit;
 
     try {
       const [total, data] = await Promise.all([
         this.userRepository.count(),
-        this.userRepository.find({skip,take:limit}),
+        this.userRepository.find({ skip, take: limit }),
       ]);
       const lastPage = Math.ceil(total / limit);
 
       if (!data) {
-        new NotFoundException ()
+        new NotFoundException();
       }
       return {
         meta: {
@@ -39,11 +45,10 @@ export class UsersService {
           lastPage,
           total,
         },
-        data
-
-      }
+        data,
+      };
     } catch (error) {
-      throw new NotFoundException;
+      throw new NotFoundException();
     }
   }
 
@@ -59,9 +64,9 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    const user = await this.userRepository.findOneBy({id})
-    if (!user){
-      throw new BadRequestException ("User Not Exist")
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new BadRequestException('User Not Exist');
     }
     return user;
   }
@@ -73,4 +78,5 @@ export class UsersService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
 }
