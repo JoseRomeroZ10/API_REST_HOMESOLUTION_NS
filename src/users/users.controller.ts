@@ -7,12 +7,16 @@ import {
   Param,
   Delete,
   Query,
-  ParseUUIDPipe,
+  ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../common/dto/pagination';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { ActiveUser } from '../common/decorators/active_user.decorator';
+import { UserActiveInterface } from '../common/interface/user-active.interface';
 
 @Controller('users')
 export class UsersController {
@@ -29,22 +33,18 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOneByEmail(@Param('email') email: string) {
-    return this.usersService.findOneByEmail(email);
-  }
-
-  @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @UseGuards(AuthGuard)
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto, @ActiveUser() user: UserActiveInterface) {
+    return this.usersService.update(id, updateUserDto,user.sub);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id',ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 }

@@ -1,9 +1,9 @@
 
 import { UserRole } from "../../common/enums/user-role.enum";
-import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { UserGender } from "src/common/enums/user-gender.enum";
-
-
+import { Column, DeleteDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { UserGender } from "../../common/enums/user-gender.enum";
+import { RentalEntity } from "../../rentals/entities/rental.entity";
+import { CommentEntity } from "src/comments/entities/comment.entity";
 @Entity()
 export class UserEntity {
     @PrimaryGeneratedColumn()
@@ -28,10 +28,18 @@ export class UserEntity {
     @Column()
     password: string;
 
-     @Column({type:'boolean', default:false})
-    active: boolean;
+    @Column({type:'boolean', default:false})
+    IsActive: boolean;
 
     @DeleteDateColumn()
     deletedAt: Date
 
+    @OneToMany(()=> RentalEntity, (rental)=> rental.user)
+    @JoinColumn({name: 'rental_id'})
+    rentals: RentalEntity[]
+
+    @OneToMany(()=> CommentEntity, (comment)=> comment.user)
+    @JoinColumn({name: 'rental_id'})
+    comment: CommentEntity[]
 }
+

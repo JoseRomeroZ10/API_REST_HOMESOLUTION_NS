@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { UserGender } from "src/common/enums/user-gender.enum";
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { UserGender } from "../../common/enums/user-gender.enum";
 
 
 export class RegisterDto {
