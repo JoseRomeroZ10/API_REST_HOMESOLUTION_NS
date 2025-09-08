@@ -1,7 +1,8 @@
-import { UserEntity } from '../../users/entities/user.entity';
-import { TypeRentals } from '../../common/enums/type-rental.enum';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CommentEntity } from 'src/comments/entities/comment.entity';
+
+import { CommentEntity } from '../../comments/entities/comment.entity';
+import { TypeRentals } from '../../common/enums/type-rental.enum';
+import { UserEntity } from '../../users/entities/user.entity';
 @Entity()
 export class RentalEntity {
   @PrimaryGeneratedColumn()

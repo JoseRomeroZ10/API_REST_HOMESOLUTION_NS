@@ -1,6 +1,7 @@
-import { RentalEntity } from "src/rentals/entities/rental.entity";
-import { UserEntity } from "../../users/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
+import { RentalEntity } from "../../rentals/entities/rental.entity";
+import { UserEntity } from "../../users/entities/user.entity";
 
 @Entity()
 export class CommentEntity {

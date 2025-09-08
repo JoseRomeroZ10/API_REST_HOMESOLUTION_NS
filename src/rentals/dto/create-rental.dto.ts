@@ -1,4 +1,5 @@
 import { IsEnum, IsNumber, IsString } from "class-validator";
+
 import { TypeRentals } from "../../common/enums/type-rental.enum";
 
 export class CreateRentalDto {

@@ -1,6 +1,7 @@
 
-import { UserRole } from "../../common/enums/user-role.enum";
 import { Column, DeleteDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
+import { UserRole } from "../../common/enums/user-role.enum";
 import { UserGender } from "../../common/enums/user-gender.enum";
 import { RentalEntity } from "../../rentals/entities/rental.entity";
 import { CommentEntity } from "src/comments/entities/comment.entity";

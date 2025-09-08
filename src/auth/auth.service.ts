@@ -1,9 +1,11 @@
+import * as bcryptjs from 'bcryptjs';
+
+import { JwtService } from '@nestjs/jwt';
 import {BadRequestException,Injectable,InternalServerErrorException,UnauthorizedException,} from '@nestjs/common';
+
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register-auth.dto';
-import * as bcryptjs from 'bcryptjs';
 import { LoginDto } from './dto/login-auth.dto';
-import { JwtService } from '@nestjs/jwt';
 
 
 @Injectable()

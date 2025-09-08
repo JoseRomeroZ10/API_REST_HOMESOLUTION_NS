@@ -1,13 +1,14 @@
 import { Body, Controller, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register-auth.dto';
-import { LoginDto } from './dto/login-auth.dto';
-import { UserRole } from '../common/enums/user-role.enum';
+
 import { Auth } from './decorators/auth.decorator';
-import { UserActiveInterface } from '../common/interface/user-active.interface';
 import { ActiveUser } from '../common/decorators/active_user.decorator';
 import { AuthGuard } from './guards/auth.guard';
+import { AuthService } from './auth.service';
 import { ChancePasswordDto } from './dto/change-password.dto';
+import { LoginDto } from './dto/login-auth.dto';
+import { RegisterDto } from './dto/register-auth.dto';
+import { UserRole } from '../common/enums/user-role.enum';
+import { UserActiveInterface } from '../common/interface/user-active.interface';
 
 @Controller('auth')
 export class AuthController {

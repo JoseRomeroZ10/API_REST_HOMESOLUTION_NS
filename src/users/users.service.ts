@@ -1,14 +1,13 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Repository, UpdateResult } from 'typeorm';
+
+import {BadRequestException,
+        ForbiddenException,Injectable,
+        InternalServerErrorException,
+        NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository, UpdateResult } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { PaginationDto } from '../common/dto/pagination';
 import { AllApiResponse } from '../common/interface/respose-api.interface';

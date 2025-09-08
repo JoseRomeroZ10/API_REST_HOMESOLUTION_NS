@@ -1,15 +1,25 @@
+import { join } from 'path';
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
 import { AuthModule } from './auth/auth.module';
 import { RentalsModule } from './rentals/rentals.module';
 import { CommentsModule } from './comments/comments.module';
+import { ChatModule } from './chat/chat.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      
+    }),
+
+    ServeStaticModule.forRoot({
+      rootPath: join (__dirname,'..', 'public'),
     }),
 
     TypeOrmModule.forRoot({
@@ -26,6 +36,8 @@ import { CommentsModule } from './comments/comments.module';
     AuthModule,
     RentalsModule,
     CommentsModule,
+    ChatModule,
+    
   ],
 })
 export class AppModule {}

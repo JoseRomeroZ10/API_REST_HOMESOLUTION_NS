@@ -1,6 +1,7 @@
-import { Transform, Type } from "class-transformer";
+import { Type } from "class-transformer";
+import { IsEnum, IsNumber, IsOptional } from "class-validator";
+
 import { PaginationDto } from "./pagination";
-import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateIf } from "class-validator";
 import { TypeRentals } from "../enums/type-rental.enum";
 
 export class RentalsFilterDto extends PaginationDto {

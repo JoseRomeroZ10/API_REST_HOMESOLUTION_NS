@@ -1,9 +1,10 @@
 import {BadRequestException,Injectable,UnauthorizedException,} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from './entities/comment.entity';
-import { Repository, UpdateResult } from 'typeorm';
 import { UserActiveInterface } from '../common/interface/user-active.interface';
 import { RentalEntity } from '../rentals/entities/rental.entity';
 
@@ -80,8 +81,6 @@ export class CommentsService {
     });
   }
 
-
-  
   // Funciones adicionales al Crud
 
   private validateOwnershipUser(

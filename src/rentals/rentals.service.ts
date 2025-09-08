@@ -1,12 +1,12 @@
 import {BadRequestException,Injectable,UnauthorizedException,} from '@nestjs/common';
-import { CreateRentalDto } from './dto/create-rental.dto';
-import { UpdateRentalDto } from './dto/update-rental.dto';
-import { Repository, UpdateResult } from 'typeorm';
-import { RentalEntity } from './entities/rental.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+
+import { RentalEntity } from './entities/rental.entity';
 import { UserActiveInterface } from '../common/interface/user-active.interface';
 import { RentalsFilterDto } from '../common/dto/rental-filter.dto';
-
+import { CreateRentalDto } from './dto/create-rental.dto';
+import { UpdateRentalDto } from './dto/update-rental.dto';
 @Injectable()
 export class RentalsService {
   constructor(

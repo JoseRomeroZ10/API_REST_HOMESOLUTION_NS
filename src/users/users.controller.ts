@@ -10,13 +10,14 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../common/dto/pagination';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { ActiveUser } from '../common/decorators/active_user.decorator';
 import { UserActiveInterface } from '../common/interface/user-active.interface';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {

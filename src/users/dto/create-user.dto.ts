@@ -7,6 +7,7 @@ import {
 
   IsString,
 } from 'class-validator';
+
 import { UserGender } from '../../common/enums/user-gender.enum';
 
 export class CreateUserDto {
