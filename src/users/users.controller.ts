@@ -11,12 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationDto } from '../common/dto/pagination';
-import { AuthGuard } from '../auth/guards/auth.guard';
 import { ActiveUser } from '../common/decorators/active_user.decorator';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { PaginationDto } from '../common/dto/pagination';
 import { UserActiveInterface } from '../common/interface/user-active.interface';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')

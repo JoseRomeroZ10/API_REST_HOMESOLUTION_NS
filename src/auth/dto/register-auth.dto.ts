@@ -1,6 +1,7 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 import { UserGender } from "../../common/enums/user-gender.enum";
+import { IsPassword } from "src/common/decorators/IsPassword.decorator";
 
 
 export class RegisterDto {
@@ -19,6 +20,7 @@ export class RegisterDto {
 
     @IsString()
     @IsNotEmpty()
+    @IsPassword()
     password: string;
 
     @IsNumber()

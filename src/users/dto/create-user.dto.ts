@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 
 import { UserGender } from '../../common/enums/user-gender.enum';
+import { IsPassword } from 'src/common/decorators/IsPassword.decorator';
 
 export class CreateUserDto {
   
@@ -27,6 +28,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
+  @IsPassword()
   password: string;
 
   @IsNumber()

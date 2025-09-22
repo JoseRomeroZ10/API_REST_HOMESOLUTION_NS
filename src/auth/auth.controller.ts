@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 
 import { Auth } from './decorators/auth.decorator';
 import { ActiveUser } from '../common/decorators/active_user.decorator';
@@ -13,6 +13,7 @@ import { UserActiveInterface } from '../common/interface/user-active.interface';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+  
   @Post('login')
   Login(@Body() loginDto: LoginDto) {
     return this.authService.Login(loginDto);
@@ -28,8 +29,7 @@ export class AuthController {
   @Patch('/chance_password')
   @UseGuards(AuthGuard)
   changePassword(@Body() chancePasswordDto:ChancePasswordDto, @ActiveUser() user: UserActiveInterface){
-    const a = 1
-    return;
+  return this.authService.changePassword(chancePasswordDto,user)
   }
     @Get('profile')
     @Auth(UserRole.ADMIN)
@@ -38,9 +38,12 @@ export class AuthController {
     }
 }
 
-  @Post('refresh')
-  refresh(@Req() req) {
-    const { token }  = req.headers;
-    return this.authService.RefreshToken( token );
-  }
+ @Post('refresh')
+  refresh(@Req() req: Request) {
+  const authHeader = req.headers['authorization'];
+  const [type, token] = authHeader?.split(' ') ?? [];
+  if (type !== 'Bearer' || !token) throw new UnauthorizedException();
+  return this.authService.refreshToken(token);
+}
+
 }

@@ -1,12 +1,18 @@
 import * as bcryptjs from 'bcryptjs';
 
 import { JwtService } from '@nestjs/jwt';
-import {BadRequestException,Injectable,InternalServerErrorException,UnauthorizedException,} from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
-import { UsersService } from '../users/users.service';
-import { RegisterDto } from './dto/register-auth.dto';
 import { LoginDto } from './dto/login-auth.dto';
-
+import { RegisterDto } from './dto/register-auth.dto';
+import { UsersService } from '../users/users.service';
+import { ChancePasswordDto } from './dto/change-password.dto';
+import { UserActiveInterface } from 'src/common/interface/user-active.interface';
 
 @Injectable()
 export class AuthService {
@@ -34,84 +40,79 @@ export class AuthService {
     };
   }
 
-  async Login(
-    loginDto: LoginDto,
-  ): Promise<{ refreshToken: string; accessToken: string; email: string }> {
-    const { email, password } = loginDto;
+async Login(loginDto: LoginDto) {
+  const { email, password } = loginDto;
 
-    const user = await this.usersService.findByEmailWithPassword(email);
-
-    if (!user) {
-      throw new UnauthorizedException('El usuario no existe');
-    }
-
-    const isPasswordValid = await bcryptjs.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Contraseña incorrecta');
-    }
-
-    const payload = { email: user.email, sub: user.id, role: user.role };
-    console.log('Payload antes de firmar:', {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    });
-
-    const accessToken = await this.jwtService.signAsync(payload, {
-      secret: process.env.JWT_SECRET,
-      expiresIn: '15m',
-    });
-    console.log('JWT_SECRET:', process.env.JWT_SECRET);
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: '7d',
-    });
-
-    if (!accessToken) {
-      throw new Error('No se pudo generar el token');
-    }
-
-    return {
-      accessToken,
-      refreshToken,
-      email: user.email,
-    };
+  const user = await this.usersService.findOneByEmail(email);
+  if (!user || !(await bcryptjs.compare(password, user.password))) {
+    throw new UnauthorizedException('Credenciales inválidas');
   }
 
+  const accessToken = await this.jwtService.signAsync(
+    { sub: user.id, email: user.email, role: user.role },
+    {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '60s',
+    },
+  );
+
+  const refreshToken = await this.jwtService.signAsync(
+    { sub: user.id, email: user.email },
+    {
+      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: '2m',
+    },
+  );
+
+  return { accessToken, refreshToken, user };
+}
+
+
+  async refreshToken(token: string): Promise<string> {
+  try {
+    const payload = await this.jwtService.verifyAsync(token, {
+      secret: process.env.JWT_REFRESH_SECRET,
+    });
+
+    if (!payload || typeof payload.sub !== 'number' || typeof payload.email !== 'string') {
+      throw new BadRequestException('Payload inválido');
+    }
+
+    const newAccessToken = await this.jwtService.signAsync(
+      { sub: payload.sub, email: payload.email },
+      {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '2m',
+      },
+    );
+
+    return newAccessToken;
+  } catch (error) {
+    console.error('Error al renovar token:', error);
+    throw new UnauthorizedException('Refresh token inválido o expirado');
+  }
+}
   //funciones adicinales
 
-  async RefreshToken(token: string): Promise<string> {
-    try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_REFRESH_SECRET,
-      });
+  async changePassword(
+    chancePasswordDto: ChancePasswordDto,
+    user: UserActiveInterface,
+  ): Promise<{ message: string }> {
+    const { oldPassword, newPassword } = chancePasswordDto;
 
-      if (!payload || !payload.email || !payload.sub) {
-        throw new BadRequestException('Token inválido o incompleto');
-      }
-
-      const newAccessToken = await this.jwtService.signAsync(
-        {
-          sub: payload.sub,
-          email: payload.email,
-          role: payload.role,
-        },
-        {
-          secret: process.env.JWT_SECRET,
-          expiresIn: '15m',
-        },
-      );
-
-      if (!newAccessToken) {
-        throw new InternalServerErrorException(
-          'No se pudo generar el nuevo token',
-        );
-      }
-
-      return newAccessToken;
-    } catch (error) {
-      throw new UnauthorizedException('Token expirado o inválido');
+    const usuario = await this.usersService.findByEmailWithPassword(user.email);
+    if (!usuario || !(await bcryptjs.compare(oldPassword, usuario.password))) {
+      throw new UnauthorizedException('Credenciales inválidas');
     }
+
+    if (oldPassword === newPassword) {
+      throw new BadRequestException('La nueva contraseña debe ser distinta');
+    }
+
+    const nuevaHash = await bcryptjs.hash(newPassword, 10);
+    await this.usersService.updatePassword(usuario.id, nuevaHash);
+
+    return { message: 'Contraseña actualizada' };
   }
 
   async profile({ email, role }: { email: string; role: string }) {

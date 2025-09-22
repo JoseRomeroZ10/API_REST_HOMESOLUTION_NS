@@ -1,14 +1,14 @@
 import { join } from 'path';
 
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth/auth.module';
-import { RentalsModule } from './rentals/rentals.module';
-import { CommentsModule } from './comments/comments.module';
 import { ChatModule } from './chat/chat.module';
+import { CommentsModule } from './comments/comments.module';
+import { RentalsModule } from './rentals/rentals.module';
 import { UsersModule } from './users/users.module';
 
 @Module({

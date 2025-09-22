@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentEntity } from './entities/comment.entity';
-import { UserActiveInterface } from '../common/interface/user-active.interface';
 import { RentalEntity } from '../rentals/entities/rental.entity';
+import { UserActiveInterface } from '../common/interface/user-active.interface';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentsService {

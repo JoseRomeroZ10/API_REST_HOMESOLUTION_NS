@@ -10,12 +10,12 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
+import { ActiveUser } from '../common/decorators/active_user.decorator';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { UserActiveInterface } from '../common/interface/user-active.interface';
-import { ActiveUser } from '../common/decorators/active_user.decorator';
-import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('comments')
 export class CommentsController {

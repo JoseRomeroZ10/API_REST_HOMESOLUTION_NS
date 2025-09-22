@@ -1,12 +1,12 @@
 import {Controller,Get,Post,  Body,Patch,Param,Delete,Query,UseGuards,} from '@nestjs/common';
 
-import { RentalsService } from './rentals.service';
-import { CreateRentalDto } from './dto/create-rental.dto';
-import { UpdateRentalDto } from './dto/update-rental.dto';
-import { ActiveUser } from '../common/decorators/active_user.decorator';
-import { UserActiveInterface } from '../common/interface/user-active.interface';
-import { RentalsFilterDto } from '../common/dto/rental-filter.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { ActiveUser } from '../common/decorators/active_user.decorator';
+import { CreateRentalDto } from './dto/create-rental.dto';
+import { RentalsService } from './rentals.service';
+import { RentalsFilterDto } from '../common/dto/rental-filter.dto';
+import { UpdateRentalDto } from './dto/update-rental.dto';
+import { UserActiveInterface } from '../common/interface/user-active.interface';
 
 @Controller('rentals')
 export class RentalsController {

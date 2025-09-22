@@ -3,14 +3,15 @@ import { Repository, UpdateResult } from 'typeorm';
 import {BadRequestException,
         ForbiddenException,Injectable,
         InternalServerErrorException,
-        NotFoundException } from '@nestjs/common';
+        NotFoundException, 
+        UnauthorizedException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { AllApiResponse } from '../common/interface/respose-api.interface';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PaginationDto } from '../common/dto/pagination';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { PaginationDto } from '../common/dto/pagination';
-import { AllApiResponse } from '../common/interface/respose-api.interface';
 
 @Injectable()
 export class UsersService {
@@ -87,6 +88,18 @@ export class UsersService {
     }
   }
 
+  //funcionales adicionales al crud
+
+  async updatePassword(userId: number, nuevaPasswordHash: string): Promise<void> {
+  const resultado = await this.userRepository.update(userId, {
+    password: nuevaPasswordHash,
+  });
+
+  if (resultado.affected === 0) {
+    throw new BadRequestException('No se pudo actualizar la contraseña');
+  }
+}
+
   async findByEmailWithPassword(email: string) {
     return await this.userRepository.findOne({
       where: { email },
@@ -95,6 +108,7 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    return await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ email });
+    return user
   }
 }
